@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0d10">
+<title>حاسبة العزبة الاحترافية</title>
+<!-- مكتبة html2canvas لتحويل التصميم إلى صورة عالية الجودة -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+:root{
+    --gold:#d6b45c;
+    --gold2:#f0d98a;
+    --dark:#090c10;
+    --dark2:#151b22;
+    --text:#17202a;
+    --muted:#7b8794;
+    --green:#35c985;
+    --red:#ed6262;
+    --bg:#eef1f4;
+    --white:#fff;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 100% 0%,rgba(214,180,92,.13),transparent 28%),
+        var(--bg);
+    font-family:Tahoma,"Segoe UI",Arial,sans-serif;
+    color:var(--text);
+    padding: 15px;
+}
+
+button,input{
+    font-family:inherit;
+}
+
+button{
+    -webkit-tap-highlight-color:transparent;
+}
+
+.app{
+    width:100%;
+    max-width:780px;
+    margin:auto;
+}
+
+.panel{
+    background:#fff;
+    border-radius:24px;
+    padding:22px;
+    box-shadow:0 15px 45px rgba(0,0,0,.09);
+}
+
+.logo{
+    width:64px;
+    height:64px;
+    margin:0 auto 12px;
+    border-radius:19px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(145deg,#242b33,#07090c);
+    color:var(--gold2);
+    font-size:29px;
+    box-shadow:0 10px 25px rgba(0,0,0,.16);
+}
+
+h1{
+    margin:0;
+    text-align:center;
+    font-size:24px;
+    font-weight:900;
+}
+
+.subtitle{
+    margin:7px 0 23px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.people-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.person-row{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 145px 45px;
+    gap:7px;
+}
+
+.input{
+    width:100%;
+    height:47px;
+    padding:0 13px;
+    border:1px solid #d8dee5;
+    border-radius:11px;
+    outline:none;
+    background:#fafbfc;
+    font-size:14px;
+}
+
+.input:focus{
+    border-color:var(--gold);
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(214,180,92,.13);
+}
+
+.delete{
+    height:47px;
+    border:0;
+    border-radius:11px;
+    background:#fff0f0;
+    color:#d83e3e;
+    font-size:22px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.add{
+    width:100%;
+    height:47px;
+    margin-top:10px;
+    border:1px dashed #cbd2da;
+    border-radius:11px;
+    background:#f8fafc;
+    color:#354254;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.calculate{
+    width:100%;
+    height:55px;
+    margin-top:12px;
+    border:0;
+    border-radius:12px;
+    background:linear-gradient(135deg,#252c34,#07090c);
+    color:#fff;
+    font-size:16px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 10px 25px rgba(0,0,0,.18);
+}
+
+.message{
+    display:none;
+    margin-top:10px;
+    padding:11px;
+    border-radius:10px;
+    background:#fff1f1;
+    color:#c73232;
+    font-size:12px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.result{
+    display:none;
+    margin-top:20px;
+}
+
+.image-preview{
+    width:100%;
+    overflow:hidden;
+    border-radius:25px;
+    background:linear-gradient(145deg,#080b0f,#171e26);
+    color:#fff;
+    box-shadow:0 15px 40px rgba(0,0,0,.18);
+}
+
+.image-inner{
+    padding:25px;
+}
+
+.header{
+    text-align:center;
+    padding-bottom:17px;
+    border-bottom:1px solid rgba(255,255,255,.09);
+}
+
+.brand{
+    color:var(--gold2);
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.header h2{
+    margin:8px 0 5px;
+    font-size:27px;
+}
+
+.header p{
+    margin:0;
+    color:#8e99a5;
+    font-size:11px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin:18px 0;
+}
+
+.stat{
+    padding:14px 5px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:13px;
+    background:rgba(255,255,255,.045);
+    text-align:center;
+}
+
+.stat small{
+    display:block;
+    color:#8d98a5;
+    font-size:9px;
+    margin-bottom:6px;
+}
+
+.stat strong{
+    font-size:15px;
+}
+
+.gold{
+    color:var(--gold2);
+}
+
+.columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.column{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.column-title{
+    font-size:12px;
+    font-weight:900;
+    margin-bottom:2px;
+}
+
+.red-title{ color:#ff7d7d; }
+.green-title{ color:#5ee09a; }
+
+.person-card{
+    padding:12px;
+    border-radius:13px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.045);
+}
+
+.person-card.red{
+    background:rgba(237,98,98,.065);
+    border-color:rgba(237,98,98,.20);
+}
+
+.person-card.green{
+    background:rgba(53,201,133,.065);
+    border-color:rgba(53,201,133,.20);
+}
+
+.person-name{
+    margin:0 0 6px;
+    font-size:14px;
+    font-weight:900;
+}
+
+.person-line{
+    margin:4px 0;
+    color:#9da8b4;
+    font-size:10px;
+}
+
+.badge{
+    display:inline-block;
+    margin-top:4px;
+    padding:4px 7px;
+    border-radius:6px;
+    font-size:9px;
+    font-weight:900;
+}
+
+.badge.red{ color:#ff8585; background:rgba(237,98,98,.12); }
+.badge.green{ color:#68e3a3; background:rgba(53,201,133,.12); }
+.badge.gray{ color:#b2bac3; background:rgba(255,255,255,.07); }
+
+.transfers{
+    margin-top:18px;
+    padding:14px;
+    border-radius:15px;
+    background:rgba(214,180,92,.065);
+    border:1px solid rgba(214,180,92,.18);
+}
+
+.transfer-title{
+    margin-bottom:9px;
+    text-align:center;
+    color:var(--gold2);
+    font-size:12px;
+    font-weight:900;
+}
+
+.transfer{
+    display:grid;
+    grid-template-columns:1fr 25px 1fr;
+    align-items:center;
+    gap:5px;
+    padding:10px;
+    margin-bottom:6px;
+    border-radius:9px;
+    background:rgba(0,0,0,.2);
+}
+
+.transfer-name{ font-size:10px; font-weight:900; }
+.transfer-arrow{ text-align:center; color:var(--gold2); font-size:15px; }
+.transfer-amount{ grid-column:1/-1; text-align:center; color:var(--gold2); font-size:11px; font-weight:900; }
+.no-transfer{ padding:5px; color:#63dfa0; text-align:center; font-size:11px; font-weight:900; }
+
+.footer{
+    margin-top:15px;
+    padding:11px;
+    border-radius:10px;
+    background:rgba(53,201,133,.07);
+    border:1px solid rgba(53,201,133,.14);
+    color:#67dfa1;
+    text-align:center;
+    font-size:10px;
+    font-weight:900;
+}
+
+.date{
+    margin-top:9px;
+    color:#65717d;
+    text-align:center;
+    font-size:8px;
+}
+
+.actions{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+    margin-top:10px;
+}
+
+.action{
+    height:50px;
+    border:0;
+    border-radius:11px;
+    font-size:12px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.download{ background:#11171e; color:#fff; }
+.share{ background:var(--gold); color:#111; }
+.whatsapp{ background:#25d366; color:#fff; }
+
+@media(max-width:600px){
+    .panel{ padding:16px; }
+    .person-row{ grid-template-columns:minmax(0,1fr) 105px 42px; gap:5px; }
+    .columns{ grid-template-columns:1fr; }
+    .actions{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+<section class="panel">
+    <div class="logo">💰</div>
+    <h1>حاسبة تسوية العزبة</h1>
+    <div class="subtitle">أدخل الأعضاء والمبالغ التي دفعها كل شخص</div>
+
+    <div id="peopleList" class="people-list">
+        <div class="person-row">
+            <input class="input name" type="text" placeholder="اسم الشخص" value="">
+            <input class="input amount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="المبلغ" value="">
+            <button class="delete" type="button">×</button>
+        </div>
+        <div class="person-row">
+            <input class="input name" type="text" placeholder="اسم الشخص" value="">
+            <input class="input amount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="المبلغ" value="">
+            <button class="delete" type="button">×</button>
+        </div>
+    </div>
+
+    <button id="addButton" class="add" type="button">＋ إضافة شخص</button>
+    <button id="calculateButton" class="calculate" type="button">إنشاء التسوية والحساب</button>
+    <div id="message" class="message"></div>
+</section>
+
+<section id="result" class="result">
+    <div id="preview" class="image-preview">
+        <div class="image-inner">
+            <div class="header">
+                <div class="brand">AL-AZBAH • EXPENSE SETTLEMENT</div>
+                <h2>تسوية حساب العزبة</h2>
+                <p>كشف المصاريف والتسوية المالية</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <small>إجمالي المصاريف</small>
+                    <strong id="total">0 ريال</strong>
+                </div>
+                <div class="stat">
+                    <small>نصيب الفرد</small>
+                    <strong id="share" class="gold">0 ريال</strong>
+                </div>
+                <div class="stat">
+                    <small>عدد الأعضاء</small>
+                    <strong id="count">0</strong>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div id="debtors" class="column">
+                    <div class="column-title red-title">🔴 عليهم دفع</div>
+                </div>
+                <div id="creditors" class="column">
+                    <div class="column-title green-title">🟢 لهم استلام</div>
+                </div>
+            </div>
+
+            <div class="transfers">
+                <div class="transfer-title">⇄ التحويلات المطلوبة</div>
+                <div id="transferList"></div>
+            </div>
+
+            <div class="footer">✓ تمت التسوية — بعد التحويلات يتحمل كل شخص نصيبه العادل</div>
+            <div id="date" class="date"></div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button id="downloadButton" class="action download" type="button">📷 تحميل الصورة</button>
+        <button id="shareButton" class="action share" type="button">📤 مشاركة الصورة</button>
+        <button id="whatsappButton" class="action whatsapp" type="button">💬 إرسال لواتساب</button>
+    </div>
+</section>
+</div>
+
+<script>
+const peopleList = document.getElementById("peopleList");
+const addButton = document.getElementById("addButton");
+const calculateButton = document.getElementById("calculateButton");
+const message = document.getElementById("message");
+const resultSection = document.getElementById("result");
+
+let globalReportData = {
+    totalText: "",
+    shareText: "",
+    transfersText: []
+};
+
+function showMessage(text){
+    message.textContent = text;
+    message.style.display = "block";
+}
+
+function hideMessage(){
+    message.textContent = "";
+    message.style.display = "none";
+}
+
+addButton.addEventListener("click", function(){
+    const row = document.createElement("div");
+    row.className = "person-row";
+    row.innerHTML = `
+        <input class="input name" type="text" placeholder="اسم الشخص" value="">
+        <input class="input amount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="المبلغ" value="">
+        <button class="delete" type="button">×</button>
+    `;
+    peopleList.appendChild(row);
+    row.querySelector(".name").focus();
+});
+
+peopleList.addEventListener("click", function(event){
+    if(!event.target.classList.contains("delete")) return;
+    const rows = peopleList.querySelectorAll(".person-row");
+    if(rows.length <= 2){
+        showMessage("يجب أن يكون هناك شخصان على الأقل.");
+        return;
+    }
+    event.target.closest(".person-row").remove();
+    hideMessage();
+});
+
+function money(value){
+    return Number(value).toLocaleString("ar-SA", { minimumFractionDigits:2, maximumFractionDigits:2 }) + " ريال";
+}
+
+function cents(value){
+    return Math.round(value * 100);
+}
+
+calculateButton.addEventListener("click", function(){
+    hideMessage();
+    try {
+        const rows = peopleList.querySelectorAll(".person-row");
+        const people = [];
+        const usedNames = new Set();
+
+        rows.forEach((row, index) => {
+            const name = row.querySelector(".name").value.trim();
+            const amountText = row.querySelector(".amount").value.trim();
+
+            if(name === "" && amountText === "") return;
+            if(name === "") throw new Error(`الشخص رقم ${index + 1} بدون اسم.`);
+            if(amountText === "") throw new Error(`لم تدخل المبلغ للشخص: ${name}`);
+
+            const amount = Number(amountText);
+            if(!Number.isFinite(amount) || amount < 0) throw new Error(`المبلغ غير صحيح للشخص: ${name}`);
+            if(usedNames.has(name)) throw new Error(`اسم "${name}" مكرر.`);
+
+            usedNames.add(name);
+            people.push({ name: name, cents: cents(amount) });
+        });
+
+        if(people.length < 2) throw new Error("أدخل شخصين على الأقل.");
+
+        const totalCents = people.reduce((sum, p) => sum + p.cents, 0);
+        const count = people.length;
+        const baseShare = Math.floor(totalCents / count);
+        const remainder = totalCents - (baseShare * count);
+
+        const balances = people.map((person, index) => {
+            const exactShare = baseShare + (index < remainder ? 1 : 0);
+            return {
+                name: person.name,
+                paidCents: person.cents,
+                shareCents: exactShare,
+                balanceCents: person.cents - exactShare
+            };
+        });
+
+        const totalFormatted = money(totalCents / 100);
+        const shareFormatted = money(baseShare / 100);
+
+        document.getElementById("total").textContent = totalFormatted;
+        document.getElementById("share").textContent = shareFormatted;
+        document.getElementById("count").textContent = count;
+
+        globalReportData.totalText = totalFormatted;
+        globalReportData.shareText = shareFormatted;
+        globalReportData.transfersText = [];
+
+        const debtorsCol = document.getElementById("debtors");
+        const creditorsCol = document.getElementById("creditors");
+        
+        debtorsCol.innerHTML = '<div class="column-title red-title">🔴 عليهم دفع</div>';
+        creditorsCol.innerHTML = '<div class="column-title green-title">🟢 لهم استلام</div>';
+
+        balances.forEach(p => {
+            const card = document.createElement("div");
+            if(p.balanceCents < 0){
+                card.className = "person-card red";
+                card.innerHTML = `
+                    <div class="person-name">${p.name}</div>
+                    <div class="person-line">دفعه: ${money(p.paidCents/100)}</div>
+                    <span class="badge red">عليه: ${money(Math.abs(p.balanceCents)/100)}</span>
+                `;
+                debtorsCol.appendChild(card);
+            } else if(p.balanceCents > 0){
+                card.className = "person-card green";
+                card.innerHTML = `
+                    <div class="person-name">${p.name}</div>
+                    <div class="person-line">دفعه: ${money(p.paidCents/100)}</div>
+                    <span class="badge green">له: ${money(p.balanceCents/100)}</span>
+                `;
+                creditorsCol.appendChild(card);
+            } else {
+                card.className = "person-card";
+                card.innerHTML = `
+                    <div class="person-name">${p.name}</div>
+                    <div class="person-line">دفعه: ${money(p.paidCents/100)}</div>
+                    <span class="badge gray">حسابه متساوي</span>
+                `;
+                debtorsCol.appendChild(card);
+            }
+        });
+
+        let debtorsList = balances.filter(p => p.balanceCents < 0).map(p => ({ name: p.name, remaining: Math.abs(p.balanceCents) }));
+        let creditorsList = balances.filter(p => p.balanceCents > 0).map(p => ({ name: p.name, remaining: p.balanceCents }));
+        
+        const transfers = [];
+        let d = 0, c = 0;
+        while(d < debtorsList.length && c < creditorsList.length){
+            const debtor = debtorsList[d];
+            const creditor = creditorsList[c];
+            const amount = Math.min(debtor.remaining, creditor.remaining);
+
+            if(amount > 0){
+                transfers.push({ from: debtor.name, to: creditor.name, cents: amount });
+            }
+            debtor.remaining -= amount;
+            creditor.remaining -= amount;
+            if(debtor.remaining === 0) d++;
+            if(creditor.remaining === 0) c++;
+        }
+
+        const transferList = document.getElementById("transferList");
+        transferList.innerHTML = "";
+        if(transfers.length === 0){
+            transferList.innerHTML = `<div class="no-transfer">لا توجد تحويلات مطلوبة، الحسابات متطابقة تماماً.</div>`;
+        } else {
+            transfers.forEach(t => {
+                const transferString = `${t.from} ← يحول إلى ${t.to} مبلغ (${money(t.cents/100)})`;
+                globalReportData.transfersText.push(transferString);
+
+                const item = document.createElement("div");
+                item.className = "transfer";
+                item.innerHTML = `
+                    <div class="transfer-name">${t.from}</div>
+                    <div class="transfer-arrow">←</div>
+                    <div class="transfer-name" style="text-align:left">${t.to}</div>
+                    <div class="transfer-amount">تحويل مبلغ: ${money(t.cents/100)}</div>
+                `;
+                transferList.appendChild(item);
+            });
+        }
+
+        const now = new Date();
+        document.getElementById("date").textContent = `تاريخ التقرير: ${now.toLocaleDateString('ar-SA')} - ${now.toLocaleTimeString('ar-SA')}`;
+
+        resultSection.style.display = "block";
+        resultSection.scrollIntoView({ behavior: 'smooth' });
+
+    } catch(err){
+        showMessage(err.message);
+    }
+});
+
+// 1. زر تحميل الصورة الحقيقي
+document.getElementById("downloadButton").addEventListener("click", function(){
+    const previewArea = document.getElementById("preview");
+    html2canvas(previewArea, { scale: 3, backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'تسوية-العزبة.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+});
+
+// 2. زر مشاركة الصورة الحقيقي (عبر واجهة المشاركة في الهاتف)
+document.getElementById("shareButton").addEventListener("click", async function(){
+    const previewArea = document.getElementById("preview");
+    try {
+        const canvas = await html2canvas(previewArea, { scale: 2, backgroundColor: null });
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], "azba-settlement.png", { type: "image/png" });
+            if(navigator.canShare && navigator.canShare({ files: [file] })){
+                await navigator.share({
+                    title: 'تسوية حساب العزبة',
+                    text: 'تقرير تسوية مصاريف العزبة',
+                    files: [file]
+                });
+            } else {
+                alert("خاصية المشاركة المباشرة غير متوفرة في متصفحك، يمكنك استخدام زر تحميل الصورة.");
+            }
+        });
+    } catch(err) {
+        console.log(err);
+    }
+});
+
+// 3. زر إرسال لواتساب الحقيقي (ينشئ نص تسوية جاهز ويرسله)
+document.getElementById("whatsappButton").addEventListener("click", function(){
+    let text = `🏕️ *تقرير تسوية حساب العزبة*\n`;
+    text += `━━━━━━━━━━━━━━━\n`;
+    text += `🔹 *إجمالي المصاريف:* ${globalReportData.totalText}\n`;
+    text += `🔹 *نصيب الفرد:* ${globalReportData.shareText}\n\n`;
+    text += `🔀 *التحويلات المطلوبة للتسوية:*\n`;
+    
+    if(globalReportData.transfersText.length === 0){
+        text += `لا توجد تحويلات مطلوبة، الحسابات متطابقة تماماً.`;
+    } else {
+        globalReportData.transfersText.forEach((t, i) => {
+            text += `${i + 1}. ${t}\n`;
+        });
+    }
+    text += `━━━━━━━━━━━━━━━\n✓ تمت التسوية بالعدل`;
+
+    const encoded = encodeURIComponent(text);
+    window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+});
+</script>
+
+</body>
+</html>
